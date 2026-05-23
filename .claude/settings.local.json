@@ -32,7 +32,11 @@
       "Bash(git init *)",
       "Bash(git add *)",
       "Bash(git commit *)",
-      "Bash(git config *)"
+      "Bash(git config *)",
+      "Bash(taskkill //F //IM java.exe)",
+      "Bash(curl -s http://localhost:8080/api/notes)",
+      "Bash(curl -s -X POST http://localhost:8080/api/notes -H \"Content-Type: application/json\" -d '{\"title\":\"测试笔记\",\"content\":\"H2 数据库工作了！\"}')",
+      "Bash(curl *)"
     ]
   }
 }

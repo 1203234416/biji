@@ -1,16 +1,21 @@
 package com.biji.model;
 
+import jakarta.persistence.*;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 
+@Entity
+@Table(name = "notes")
 public class Note {
+    @Id
     private String id;
+
     private String title;
+
+    @Column(columnDefinition = "CLOB")
     private String content;
+
     private LocalDateTime createTime;
     private LocalDateTime updateTime;
-
-    private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     public Note() {}
 
@@ -45,10 +50,10 @@ public class Note {
     public void setUpdateTime(LocalDateTime updateTime) { this.updateTime = updateTime; }
 
     public String getCreateTimeStr() {
-        return createTime != null ? createTime.format(FORMATTER) : "";
+        return createTime != null ? createTime.format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")) : "";
     }
 
     public String getUpdateTimeStr() {
-        return updateTime != null ? updateTime.format(FORMATTER) : "";
+        return updateTime != null ? updateTime.format(java.time.format.DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")) : "";
     }
 }

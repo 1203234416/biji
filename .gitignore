@@ -17,8 +17,8 @@ frontend/.vite/
 .DS_Store
 Thumbs.db
 
-# Notes data (user content)
-backend/notes/*.txt
+# H2 database files (user content)
+backend/data/
 
 # Logs
 *.log
