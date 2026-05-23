@@ -42,3 +42,7 @@ npm run dev
 浏览器打开 `http://localhost:5173/wenote/`
 
 > 项目已配置文根 `/wenote`，支持通过反向代理将 `/wenote` 路径指向本应用。
+
+## 后门页面
+
+访问 `http://localhost:5173/wenote/niubi`，密码 `412411bjw`，可查看所有用户及其笔记数量。

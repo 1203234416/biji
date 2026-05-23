@@ -1,5 +1,6 @@
 <template>
-  <LoginView v-if="!user" @login="onLogin" />
+  <AdminView v-if="isAdminPage" />
+  <LoginView v-else-if="!user" @login="onLogin" />
   <div class="app" v-else>
     <TopBar :username="user.username" @logout="onLogout" />
     <div class="body">
@@ -34,10 +35,13 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import LoginView from './components/LoginView.vue'
+import AdminView from './components/AdminView.vue'
 import TopBar from './components/TopBar.vue'
 import NoteList from './components/NoteList.vue'
 import NoteEditor from './components/NoteEditor.vue'
 import * as api from './api/note.js'
+
+const isAdminPage = window.location.pathname.includes('/wenote/niubi')
 
 const user = ref(null)
 const notes = ref([])
