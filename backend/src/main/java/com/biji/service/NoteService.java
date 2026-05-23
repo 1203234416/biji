@@ -2,6 +2,7 @@ package com.biji.service;
 
 import com.biji.model.Note;
 import com.biji.repository.NoteRepository;
+import com.biji.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -10,18 +11,20 @@ import java.util.*;
 @Service
 public class NoteService {
 
-    private final NoteRepository repo;
+    private final NoteRepository noteRepo;
+    private final UserRepository userRepo;
 
-    public NoteService(NoteRepository repo) {
-        this.repo = repo;
+    public NoteService(NoteRepository noteRepo, UserRepository userRepo) {
+        this.noteRepo = noteRepo;
+        this.userRepo = userRepo;
     }
 
     public List<Note> listNotes(String userId) {
-        return repo.findByUserIdOrderByUpdateTimeDesc(userId);
+        return noteRepo.findByUserIdOrderByUpdateTimeDesc(userId);
     }
 
     public Note getNote(String id, String userId) {
-        Note note = repo.findById(id).orElse(null);
+        Note note = noteRepo.findById(id).orElse(null);
         if (note == null || !note.getUserId().equals(userId)) return null;
         return note;
     }
@@ -37,11 +40,11 @@ public class NoteService {
         note.setContent(content != null ? content : "");
         note.setCreateTime(LocalDateTime.now());
         note.setUpdateTime(LocalDateTime.now());
-        return repo.save(note);
+        return noteRepo.save(note);
     }
 
     public Note updateNote(String id, String userId, String title, String content) {
-        Note note = repo.findById(id).orElse(null);
+        Note note = noteRepo.findById(id).orElse(null);
         if (note == null || !note.getUserId().equals(userId)) return null;
         if (title != null && !title.isBlank()) {
             note.setTitle(title);
@@ -50,13 +53,14 @@ public class NoteService {
             note.setContent(content);
         }
         note.setUpdateTime(LocalDateTime.now());
-        return repo.save(note);
+        return noteRepo.save(note);
     }
 
     public boolean deleteNote(String id, String userId) {
-        Note note = repo.findById(id).orElse(null);
+        Note note = noteRepo.findById(id).orElse(null);
         if (note == null || !note.getUserId().equals(userId)) return false;
-        repo.deleteById(id);
+        noteRepo.deleteById(id);
+        cleanupUser(userId);
         return true;
     }
 
@@ -66,5 +70,11 @@ public class NoteService {
             if (deleteNote(id, userId)) count++;
         }
         return count;
+    }
+
+    private void cleanupUser(String userId) {
+        if (noteRepo.findByUserIdOrderByUpdateTimeDesc(userId).isEmpty()) {
+            userRepo.deleteById(userId);
+        }
     }
 }

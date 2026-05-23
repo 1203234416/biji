@@ -11,30 +11,16 @@
         @keyup.enter="doLogin"
       />
       <button class="btn" :disabled="!username.trim()" @click="doLogin">进入</button>
-      <div class="recent" v-if="users.length > 0">
-        <p>已有账号：</p>
-        <span
-          v-for="u in users"
-          :key="u.id"
-          class="tag"
-          @click="username = u.username; doLogin()"
-        >{{ u.username }}</span>
-      </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref } from 'vue'
 import * as userApi from '../api/user.js'
 
 const emit = defineEmits(['login'])
 const username = ref('')
-const users = ref([])
-
-onMounted(async () => {
-  users.value = await userApi.listUsers()
-})
 
 async function doLogin() {
   const name = username.value.trim()
@@ -115,35 +101,5 @@ h1 {
 
 .btn:not(:disabled):hover {
   background: #40916c;
-}
-
-.recent {
-  margin-top: 28px;
-  text-align: left;
-  border-top: 1px solid #eee;
-  padding-top: 20px;
-}
-
-.recent p {
-  font-size: 13px;
-  color: #aaa;
-  margin-bottom: 10px;
-}
-
-.tag {
-  display: inline-block;
-  padding: 4px 14px;
-  background: #f0faf3;
-  color: #52b788;
-  border-radius: 20px;
-  font-size: 14px;
-  cursor: pointer;
-  margin: 0 6px 6px 0;
-  transition: all 0.15s;
-}
-
-.tag:hover {
-  background: #52b788;
-  color: #fff;
 }
 </style>

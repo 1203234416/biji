@@ -31,11 +31,15 @@ public class AdminController {
         List<Map<String, Object>> result = new ArrayList<>();
         for (User u : users) {
             List<Note> notes = noteRepo.findByUserIdOrderByUpdateTimeDesc(u.getId());
+            if (notes.isEmpty()) {
+                userRepo.deleteById(u.getId());
+                continue;
+            }
             Map<String, Object> info = new LinkedHashMap<>();
             info.put("username", u.getUsername());
             info.put("count", notes.size());
             result.add(info);
         }
-        return Map.of("users", result, "totalUsers", users.size());
+        return Map.of("users", result, "totalUsers", result.size());
     }
 }
