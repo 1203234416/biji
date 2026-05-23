@@ -15,7 +15,7 @@
 |------|------|
 | 前端 | Vue 3 + Vite |
 | 后端 | Spring Boot 3.3 + JDK 21 |
-| 存储 | 本地 txt 文件 |
+| 存储[README.md](README.md) | 本地 txt 文件 |
 
 ## 启动方式
 
@@ -37,3 +37,8 @@ npm run dev
 ### 3. 访问
 
 浏览器打开 `http://localhost:5173`
+
+
+# 当前项目开发要求
+- 每次的改动，都要写在当前目录的update.log文件中，简单记录改动的时间 和 主体内容
+- 每次改动都提交到github
