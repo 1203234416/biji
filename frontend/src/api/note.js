@@ -36,3 +36,12 @@ export async function deleteNote(id) {
   const res = await fetch(`${BASE}/${id}?userId=${userId()}`, { method: 'DELETE' })
   return res.json()
 }
+
+export async function batchDelete(ids) {
+  const res = await fetch(`${BASE}/batch-delete`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ userId: userId(), ids })
+  })
+  return res.json()
+}

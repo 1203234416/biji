@@ -17,6 +17,13 @@
         :class="{ active: activeId === note.id }"
         @click="$emit('select', note.id)"
       >
+        <input
+          type="checkbox"
+          class="checkbox"
+          :checked="selectedIds.has(note.id)"
+          @click.stop
+          @change="$emit('toggleSelect', note.id)"
+        />
         <div class="note-info">
           <div class="note-title">{{ note.title }}</div>
           <div class="note-time">{{ note.createTimeStr }}</div>
@@ -32,16 +39,21 @@
         还没有笔记，点击上方按钮创建第一篇吧
       </div>
     </div>
+    <div class="batch-bar" v-if="selectedIds.size > 0">
+      <span>已选 {{ selectedIds.size }} 篇</span>
+      <button class="btn-batch-delete" @click="$emit('batchDelete')">批量删除</button>
+    </div>
   </aside>
 </template>
 
 <script setup>
 defineProps({
   notes: { type: Array, default: () => [] },
-  activeId: { type: String, default: '' }
+  activeId: { type: String, default: '' },
+  selectedIds: { type: Set, default: () => new Set() }
 })
 
-defineEmits(['select', 'create', 'delete'])
+defineEmits(['select', 'create', 'delete', 'toggleSelect', 'batchDelete'])
 </script>
 
 <style scoped>
@@ -116,6 +128,14 @@ defineEmits(['select', 'create', 'delete'])
   color: #fff;
 }
 
+.checkbox {
+  width: 16px;
+  height: 16px;
+  accent-color: #52b788;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
 .note-info {
   flex: 1;
   min-width: 0;
@@ -176,5 +196,32 @@ defineEmits(['select', 'create', 'delete'])
   font-size: 13px;
   padding: 32px 16px;
   line-height: 1.6;
+}
+
+.batch-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  background: #1b4332;
+  color: #fff;
+  font-size: 13px;
+  border-top: 1px solid #2d6a4f;
+}
+
+.btn-batch-delete {
+  padding: 6px 16px;
+  border: none;
+  background: #e74c3c;
+  color: #fff;
+  border-radius: 6px;
+  font-size: 13px;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.btn-batch-delete:hover {
+  background: #c0392b;
 }
 </style>

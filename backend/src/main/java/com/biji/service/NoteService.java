@@ -59,4 +59,12 @@ public class NoteService {
         repo.deleteById(id);
         return true;
     }
+
+    public int batchDelete(List<String> ids, String userId) {
+        int count = 0;
+        for (String id : ids) {
+            if (deleteNote(id, userId)) count++;
+        }
+        return count;
+    }
 }

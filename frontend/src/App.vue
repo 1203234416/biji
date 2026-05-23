@@ -6,9 +6,12 @@
       <NoteList
         :notes="notes"
         :activeId="activeId"
+        :selectedIds="selectedIds"
         @select="selectNote"
         @create="createNote"
         @delete="confirmDelete"
+        @toggleSelect="toggleSelect"
+        @batchDelete="confirmBatchDelete"
       />
       <NoteEditor
         :note="currentNote"
@@ -18,7 +21,7 @@
     <div class="overlay" v-if="showDeleteConfirm" @click="showDeleteConfirm = false">
       <div class="dialog" @click.stop>
         <h3>确认删除</h3>
-        <p>确定要删除笔记「{{ deletingNote?.title }}」吗？此操作不可撤销。</p>
+        <p>确定要删除{{ batchDeleteMode ? '' : '笔记「' + deletingNote?.title + '」' }}{{ batchDeleteMode ? deletingNote?.title + '？' : '？' }}此操作不可撤销。</p>
         <div class="dialog-actions">
           <button class="btn-cancel" @click="showDeleteConfirm = false">取消</button>
           <button class="btn-confirm" @click="doDelete">确认删除</button>
@@ -39,8 +42,10 @@ import * as api from './api/note.js'
 const user = ref(null)
 const notes = ref([])
 const activeId = ref('')
+const selectedIds = ref(new Set())
 const showDeleteConfirm = ref(false)
 const deletingNote = ref(null)
+const batchDeleteMode = ref(false)
 
 const currentNote = computed(() => {
   return notes.value.find(n => n.id === activeId.value) || null
@@ -56,7 +61,7 @@ onMounted(() => {
 })
 
 async function loadNotes() {
-  await loadNotes()
+  notes.value = await api.listNotes()
 }
 
 function onLogin(u) {
@@ -76,6 +81,22 @@ async function selectNote(id) {
   activeId.value = id
 }
 
+function toggleSelect(id) {
+  const next = new Set(selectedIds.value)
+  if (next.has(id)) {
+    next.delete(id)
+  } else {
+    next.add(id)
+  }
+  selectedIds.value = next
+}
+
+async function confirmBatchDelete() {
+  batchDeleteMode.value = true
+  deletingNote.value = { title: `${selectedIds.value.size} 篇笔记` }
+  showDeleteConfirm.value = true
+}
+
 async function createNote() {
   const note = await api.createNote('未命名笔记', '')
   await loadNotes()
@@ -88,13 +109,17 @@ function confirmDelete(id) {
 }
 
 async function doDelete() {
-  if (deletingNote.value) {
+  if (batchDeleteMode.value) {
+    await api.batchDelete([...selectedIds.value])
+    selectedIds.value = new Set()
+    batchDeleteMode.value = false
+  } else if (deletingNote.value) {
     await api.deleteNote(deletingNote.value.id)
     if (activeId.value === deletingNote.value.id) {
       activeId.value = ''
     }
-    await loadNotes()
   }
+  await loadNotes()
   showDeleteConfirm.value = false
   deletingNote.value = null
 }

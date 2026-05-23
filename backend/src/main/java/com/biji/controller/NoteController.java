@@ -42,4 +42,13 @@ public class NoteController {
         boolean ok = noteService.deleteNote(id, userId);
         return Map.of("success", ok);
     }
+
+    @PostMapping("/batch-delete")
+    public Map<String, Object> batchDelete(@RequestBody Map<String, Object> body) {
+        String userId = (String) body.get("userId");
+        @SuppressWarnings("unchecked")
+        List<String> ids = (List<String>) body.get("ids");
+        int count = noteService.batchDelete(ids, userId);
+        return Map.of("success", true, "count", count);
+    }
 }

@@ -22,6 +22,7 @@ backend/data/
 
 # Logs
 *.log
+!update.log
 
 # Env
 .env
