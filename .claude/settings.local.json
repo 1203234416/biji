@@ -1,0 +1,38 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm install *)",
+      "Bash(java --version)",
+      "Bash(mvn --version)",
+      "Bash(where.exe mvn *)",
+      "Read(//c/Program Files/**)",
+      "Bash(dir \"C:\\\\Program Files\\\\apache-maven*\")",
+      "Bash(dir \"C:\\\\maven*\")",
+      "Bash(where.exe mvn.cmd)",
+      "Bash(scoop list *)",
+      "Bash(choco list *)",
+      "Bash(npx vite *)",
+      "Bash(cmd.exe *)",
+      "Bash(java -version)",
+      "Bash(where mvn *)",
+      "Bash(where java *)",
+      "Bash(curl -s \"https://dlcdn.apache.org/maven/maven-3/\")",
+      "Bash(mkdir -p /c/tools)",
+      "Bash(curl -sL \"https://dlcdn.apache.org/maven/maven-3/3.9.16/binaries/apache-maven-3.9.16-bin.zip\" -o /tmp/maven.zip)",
+      "Bash(unzip -qo /tmp/maven.zip -d /c/tools/)",
+      "Bash(rm /tmp/maven.zip)",
+      "Bash(/c/tools/apache-maven-3.9.16/bin/mvn *)",
+      "Bash(npm run *)",
+      "Bash(cmd *)",
+      "Bash(git --version)",
+      "Bash(gh --version)",
+      "Bash(gh auth *)",
+      "Bash(curl -sL \"https://github.com/cli/cli/releases/latest/download/gh_2.89.0_windows_amd64.msi\" --output /tmp/gh.msi)",
+      "Bash(winget install *)",
+      "Bash(git init *)",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(git config *)"
+    ]
+  }
+}
