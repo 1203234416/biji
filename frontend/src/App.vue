@@ -1,6 +1,7 @@
 <template>
-  <div class="app">
-    <TopBar />
+  <LoginView v-if="!user" @login="onLogin" />
+  <div class="app" v-else>
+    <TopBar :username="user.username" @logout="onLogout" />
     <div class="body">
       <NoteList
         :notes="notes"
@@ -29,11 +30,13 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
+import LoginView from './components/LoginView.vue'
 import TopBar from './components/TopBar.vue'
 import NoteList from './components/NoteList.vue'
 import NoteEditor from './components/NoteEditor.vue'
 import * as api from './api/note.js'
 
+const user = ref(null)
 const notes = ref([])
 const activeId = ref('')
 const showDeleteConfirm = ref(false)
@@ -43,9 +46,31 @@ const currentNote = computed(() => {
   return notes.value.find(n => n.id === activeId.value) || null
 })
 
-onMounted(async () => {
-  notes.value = await api.listNotes()
+onMounted(() => {
+  const id = localStorage.getItem('biji_user_id')
+  const username = localStorage.getItem('biji_username')
+  if (id && username) {
+    user.value = { id, username }
+    loadNotes()
+  }
 })
+
+async function loadNotes() {
+  await loadNotes()
+}
+
+function onLogin(u) {
+  user.value = u
+  loadNotes()
+}
+
+function onLogout() {
+  localStorage.removeItem('biji_user_id')
+  localStorage.removeItem('biji_username')
+  user.value = null
+  notes.value = []
+  activeId.value = ''
+}
 
 async function selectNote(id) {
   activeId.value = id
@@ -53,7 +78,7 @@ async function selectNote(id) {
 
 async function createNote() {
   const note = await api.createNote('未命名笔记', '')
-  notes.value = await api.listNotes()
+  await loadNotes()
   activeId.value = note.id
 }
 
@@ -68,7 +93,7 @@ async function doDelete() {
     if (activeId.value === deletingNote.value.id) {
       activeId.value = ''
     }
-    notes.value = await api.listNotes()
+    await loadNotes()
   }
   showDeleteConfirm.value = false
   deletingNote.value = null
@@ -77,7 +102,7 @@ async function doDelete() {
 async function handleUpdate({ title, content }) {
   if (!activeId.value) return
   await api.updateNote(activeId.value, title, content)
-  notes.value = await api.listNotes()
+  await loadNotes()
 }
 </script>
 

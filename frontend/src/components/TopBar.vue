@@ -10,12 +10,19 @@
       </svg>
       <h1>我的笔记</h1>
     </div>
-    <div class="time">{{ currentTime }}</div>
+    <div class="right">
+      <span class="user">{{ username }}</span>
+      <button class="logout-btn" @click="$emit('logout')">退出</button>
+      <span class="time">{{ currentTime }}</span>
+    </div>
   </header>
 </template>
 
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue'
+
+defineProps(['username'])
+defineEmits(['logout'])
 
 const currentTime = ref('')
 let timer = null
@@ -73,6 +80,37 @@ onUnmounted(() => {
   font-weight: 500;
   letter-spacing: 2px;
   margin: 0;
+}
+
+.right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.user {
+  font-size: 15px;
+  font-weight: 400;
+  letter-spacing: 1px;
+  opacity: 0.85;
+  color: #b7efc5;
+}
+
+.logout-btn {
+  padding: 4px 14px;
+  border: 1px solid rgba(255,255,255,0.3);
+  background: transparent;
+  color: rgba(255,255,255,0.8);
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  font-family: inherit;
+  transition: all 0.15s;
+}
+
+.logout-btn:hover {
+  background: rgba(255,255,255,0.1);
+  color: #fff;
 }
 
 .time {

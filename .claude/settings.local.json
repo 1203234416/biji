@@ -38,7 +38,14 @@
       "Bash(curl -s -X POST http://localhost:8080/api/notes -H \"Content-Type: application/json\" -d '{\"title\":\"测试笔记\",\"content\":\"H2 数据库工作了！\"}')",
       "Bash(curl *)",
       "WebSearch",
-      "Bash(taskkill //F //IM node.exe)"
+      "Bash(taskkill //F //IM node.exe)",
+      "Bash(ping -n 2 github.com)",
+      "Bash(ssh -T -o ConnectTimeout=5 git@github.com)",
+      "Bash(ssh-keyscan github.com)",
+      "Bash(ssh-keygen -t ed25519 -C \"1203234416@qq.com\" -f ~/.ssh/id_ed25519 -N \"\")",
+      "Bash(git remote *)",
+      "Bash(git push *)",
+      "Bash(python3 -c \"import json,sys; data=json.load\\(sys.stdin\\); [print\\(n['id']\\) for n in data]\")"
     ]
   }
 }

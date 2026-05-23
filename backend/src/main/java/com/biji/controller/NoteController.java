@@ -18,28 +18,28 @@ public class NoteController {
     }
 
     @GetMapping
-    public List<Note> list() {
-        return noteService.listNotes();
+    public List<Note> list(@RequestParam String userId) {
+        return noteService.listNotes(userId);
     }
 
     @GetMapping("/{id}")
-    public Note get(@PathVariable String id) {
-        return noteService.getNote(id);
+    public Note get(@PathVariable String id, @RequestParam String userId) {
+        return noteService.getNote(id, userId);
     }
 
     @PostMapping
     public Note create(@RequestBody Map<String, String> body) {
-        return noteService.createNote(body.get("title"), body.get("content"));
+        return noteService.createNote(body.get("userId"), body.get("title"), body.get("content"));
     }
 
     @PutMapping("/{id}")
     public Note update(@PathVariable String id, @RequestBody Map<String, String> body) {
-        return noteService.updateNote(id, body.get("title"), body.get("content"));
+        return noteService.updateNote(id, body.get("userId"), body.get("title"), body.get("content"));
     }
 
     @DeleteMapping("/{id}")
-    public Map<String, Object> delete(@PathVariable String id) {
-        boolean ok = noteService.deleteNote(id);
+    public Map<String, Object> delete(@PathVariable String id, @RequestParam String userId) {
+        boolean ok = noteService.deleteNote(id, userId);
         return Map.of("success", ok);
     }
 }

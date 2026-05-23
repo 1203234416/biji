@@ -16,20 +16,23 @@ public class NoteService {
         this.repo = repo;
     }
 
-    public List<Note> listNotes() {
-        return repo.findAllByOrderByUpdateTimeDesc();
+    public List<Note> listNotes(String userId) {
+        return repo.findByUserIdOrderByUpdateTimeDesc(userId);
     }
 
-    public Note getNote(String id) {
-        return repo.findById(id).orElse(null);
+    public Note getNote(String id, String userId) {
+        Note note = repo.findById(id).orElse(null);
+        if (note == null || !note.getUserId().equals(userId)) return null;
+        return note;
     }
 
-    public Note createNote(String title, String content) {
+    public Note createNote(String userId, String title, String content) {
         if (title == null || title.isBlank()) {
             title = "未命名笔记";
         }
         Note note = new Note();
         note.setId(UUID.randomUUID().toString().substring(0, 8));
+        note.setUserId(userId);
         note.setTitle(title);
         note.setContent(content != null ? content : "");
         note.setCreateTime(LocalDateTime.now());
@@ -37,9 +40,9 @@ public class NoteService {
         return repo.save(note);
     }
 
-    public Note updateNote(String id, String title, String content) {
+    public Note updateNote(String id, String userId, String title, String content) {
         Note note = repo.findById(id).orElse(null);
-        if (note == null) return null;
+        if (note == null || !note.getUserId().equals(userId)) return null;
         if (title != null && !title.isBlank()) {
             note.setTitle(title);
         }
@@ -50,11 +53,10 @@ public class NoteService {
         return repo.save(note);
     }
 
-    public boolean deleteNote(String id) {
-        if (repo.existsById(id)) {
-            repo.deleteById(id);
-            return true;
-        }
-        return false;
+    public boolean deleteNote(String id, String userId) {
+        Note note = repo.findById(id).orElse(null);
+        if (note == null || !note.getUserId().equals(userId)) return false;
+        repo.deleteById(id);
+        return true;
     }
 }
