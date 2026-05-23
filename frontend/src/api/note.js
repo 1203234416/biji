@@ -1,4 +1,4 @@
-const BASE = '/api/notes'
+const BASE = '/wenote/api/notes'
 
 export async function listNotes() {
   const res = await fetch(BASE)
