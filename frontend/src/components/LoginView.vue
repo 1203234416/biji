@@ -10,7 +10,7 @@
         maxlength="20"
         @keyup.enter="doLogin"
       />
-      <button class="btn" :disabled="!username.trim()" @click="doLogin">进入</button>
+      <button class="btn" :disabled="!username.trim()" @click="doLogin">登录</button>
     </div>
   </div>
 </template>
